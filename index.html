@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What Are Suffixes? Quiz</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f4ff; min-height: 100vh; display: flex; justify-content: center; align-items: flex-start; padding: 20px; }
+  .card { background: #fff; border-radius: 18px; box-shadow: 0 4px 24px rgba(0,0,0,0.10); max-width: 480px; width: 100%; padding: 28px 24px; margin: auto; }
+
+  /* MENU */
+  .brand { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: #aaa; text-align: center; margin-bottom: 4px; }
+  .quiz-title { font-size: 1.5rem; font-weight: 700; color: #1a1a2e; text-align: center; margin-bottom: 6px; }
+  .quiz-subtitle { font-size: 0.9rem; color: #666; text-align: center; margin-bottom: 22px; }
+  .section-btn { display: block; width: 100%; padding: 13px 18px; margin-bottom: 11px; border: none; border-radius: 12px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.2s; text-align: left; }
+  .section-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.13); }
+  .btn-s1 { background: linear-gradient(135deg, #e3f2fd, #bbdefb); color: #1565c0; }
+  .btn-s2 { background: linear-gradient(135deg, #e8f5e9, #c8e6c9); color: #2e7d32; }
+  .btn-s3 { background: linear-gradient(135deg, #fff3e0, #ffe0b2); color: #e65100; }
+  .btn-s4 { background: linear-gradient(135deg, #fce4ec, #f8bbd0); color: #880e4f; }
+  .btn-mastery { background: linear-gradient(135deg, #7b1fa2, #4a148c); color: #fff; }
+
+  /* QUIZ */
+  .section-header { font-size: 1rem; font-weight: 700; color: #555; margin-bottom: 4px; }
+  .question-counter { font-size: 0.82rem; color: #999; margin-bottom: 14px; }
+  .question-text { font-size: 1.05rem; font-weight: 600; color: #1a1a2e; margin-bottom: 18px; line-height: 1.5; }
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  .opt-btn { padding: 11px 15px; border-radius: 10px; border: 2px solid #e0e0e0; background: #fafafa; font-size: 0.97rem; cursor: pointer; text-align: left; transition: all 0.15s; }
+  .opt-btn:hover:not(:disabled) { border-color: #7b1fa2; background: #f3e5f5; }
+  .opt-btn.correct { border-color: #2e7d32; background: #e8f5e9; color: #1b5e20; }
+  .opt-btn.wrong { border-color: #c62828; background: #ffebee; color: #b71c1c; }
+  .opt-btn:disabled { cursor: default; }
+
+  .feedback { margin-top: 14px; padding: 10px 14px; border-radius: 9px; font-size: 0.93rem; font-weight: 600; }
+  .feedback.correct { background: #e8f5e9; color: #2e7d32; }
+  .feedback.wrong { background: #ffebee; color: #c62828; }
+
+  .hint-btn { margin-top: 12px; padding: 8px 16px; border-radius: 8px; border: 1.5px solid #f9a825; background: #fffde7; color: #f57f17; font-size: 0.88rem; font-weight: 600; cursor: pointer; transition: all 0.15s; }
+  .hint-btn:hover { background: #fff9c4; }
+  .hint-box { margin-top: 10px; padding: 9px 13px; background: #fffde7; border: 1.5px solid #f9a825; border-radius: 8px; font-size: 0.9rem; color: #5d4037; }
+
+  .next-btn { margin-top: 16px; width: 100%; padding: 12px; border-radius: 10px; border: none; background: #1a1a2e; color: #fff; font-size: 1rem; font-weight: 700; cursor: pointer; transition: background 0.2s; }
+  .next-btn:hover { background: #2d2d5e; }
+
+  .exit-btn { margin-top: 12px; width: 100%; padding: 10px; border-radius: 10px; border: 2px solid #ef9a9a; background: #fff0f0; color: #c62828; font-size: 0.93rem; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+  .exit-btn:hover { background: #ef9a9a; border-color: #c62828; color: #b71c1c; }
+
+  .stats-row { display: flex; gap: 8px; margin-bottom: 16px; }
+  .stat-pill { flex: 1; text-align: center; padding: 7px 4px; border-radius: 9px; font-size: 0.82rem; font-weight: 700; }
+  .pill-pts { background: #e8eaf6; color: #3949ab; }
+  .pill-cor { background: #e8f5e9; color: #2e7d32; }
+  .pill-wrg { background: #ffebee; color: #c62828; }
+  .pill-pct { background: #f3e5f5; color: #7b1fa2; }
+
+  /* END SCREEN */
+  .end-screen { text-align: center; }
+  .trophy { font-size: 3.5rem; margin-bottom: 8px; }
+  .stars-row { display: flex; justify-content: center; gap: 8px; margin-bottom: 14px; }
+  .star { font-size: 1.7rem; opacity: 0; animation: popIn 0.4s ease forwards; }
+  @keyframes popIn { 0%{transform:scale(0);opacity:0;} 70%{transform:scale(1.3);opacity:1;} 100%{transform:scale(1);opacity:1;} }
+  .end-title { font-size: 1.3rem; font-weight: 800; color: #1a1a2e; margin-bottom: 8px; }
+  .end-subtitle { font-size: 0.93rem; color: #666; margin-bottom: 18px; }
+  .end-stats { display: flex; gap: 8px; margin-bottom: 18px; }
+  .end-pill { flex: 1; text-align: center; padding: 10px 4px; border-radius: 10px; font-size: 0.85rem; font-weight: 700; }
+  .action-btn { width: 100%; padding: 12px; border-radius: 10px; border: none; font-size: 1rem; font-weight: 700; cursor: pointer; margin-bottom: 9px; transition: all 0.2s; }
+  .btn-try { background: #1a1a2e; color: #fff; }
+  .btn-try:hover { background: #2d2d5e; }
+  .btn-menu { background: #e3f2fd; color: #1565c0; }
+  .btn-menu:hover { background: #bbdefb; }
+
+  .review-box { margin-top: 18px; background: #f8f9ff; border: 1.5px solid #c5cae9; border-radius: 12px; padding: 16px; text-align: left; }
+  .review-box h3 { font-size: 0.95rem; font-weight: 800; color: #1a1a2e; margin-bottom: 6px; }
+  .review-box .rq { font-size: 0.92rem; font-weight: 700; color: #1a1a2e; margin-bottom: 8px; }
+  .review-box p { font-size: 0.85rem; color: #555; margin-bottom: 7px; line-height: 1.5; }
+  .review-link-btn { display: block; width: 100%; padding: 11px; border-radius: 9px; border: none; background: #1a1a2e; color: #fff; font-size: 0.92rem; font-weight: 700; cursor: pointer; text-decoration: none; text-align: center; margin-top: 8px; }
+  .review-link-btn + .review-link-btn { margin-top: 7px; }
+
+  .prog-bar-wrap { background: #e0e0e0; border-radius: 6px; height: 7px; margin-bottom: 18px; overflow: hidden; }
+  .prog-bar { height: 100%; border-radius: 6px; background: linear-gradient(90deg, #7b1fa2, #1565c0); transition: width 0.3s; }
+
+  .encourage-icon { font-size: 3rem; margin-bottom: 10px; }
+</style>
+</head>
+<body>
+<div class="card" id="app"></div>
+<script>
+// ===== URL PARAM =====
+const urlParams = new URLSearchParams(window.location.search);
+const SRC = urlParams.get('src'); // 'etsy' | 'amazon' | null
+
+const PAPERBACK_ASIN = 'B0GG4X2NM3';
+const HARDCOVER_ASIN = 'B0GG7GTPY1';
+
+// ===== QUESTIONS =====
+const SECTIONS = [
+  {
+    id: 's1',
+    title: 'Section 1: Noun Suffixes',
+    subtitle: '–er, –or, –ist, –ness, –ment',
+    btnClass: 'btn-s1',
+    questions: [
+      { q: 'A person who teaches is called a ______.', opts: ['teacher','teachor','teachist','teachen'], ans: 0, hint: 'Look for the common person-maker suffix used for school workers.' },
+      { q: 'Add -er to "sing" to make a person-maker word.', opts: ['singor','singer','singist','singment'], ans: 1, hint: 'Most action words simply add -er to describe the person doing it.' },
+      { q: 'A person who acts in movies is called an ______.', opts: ['actist','actor','acter','acten'], ans: 1, hint: 'Some person-maker words use -or instead of -er.' },
+      { q: 'A person who directs a movie is a ______.', opts: ['directer','directist','director','directen'], ans: 2, hint: 'Think of words like actor; it uses the -or ending.' },
+      { q: 'A person who is an expert in art is a ______.', opts: ['artment','artor','artness','artist'], ans: 3, hint: 'Experts in sciences or arts often use the -ist suffix.' },
+      { q: 'A person who is an expert in science is a ______.', opts: ['sciencer','sciencor','scientist','sciencen'], ans: 2, hint: 'Think of someone who works in a laboratory.' },
+      { q: 'A person who tours a new place is a ______.', opts: ['tourer','touror','tourment','tourist'], ans: 3, hint: 'This suffix means a person who practices or travels.' },
+      { q: '"Kind" + "-ness" = the state of being kind. What is the word?', opts: ['kinder','kindest','kindness','kindment'], ans: 2, hint: 'Simply combine the base word with the state-of-being suffix.' },
+      { q: '"Happy" + "-ness" = the state of being happy. What is the word? (Remember: y → i)', opts: ['happiness','happyness','happiment','happyment'], ans: 0, hint: 'Change the y to an i before adding the suffix!' },
+      { q: '"Enjoy" + "-ment" = the act of enjoying. What is the word?', opts: ['enjoyness','enjoyful','enjoyer','enjoyment'], ans: 3, hint: 'Glue the base word directly to the -ment suffix.' },
+      { q: '"Pay" + "-ment" = the result of paying. What is the word?', opts: ['payness','payor','payment','payer'], ans: 2, hint: 'Think of the paper you receive after buying something.' },
+      { q: 'Which sentence uses "darkness" correctly?', opts: ['The darkness of the cave made it hard to see.','I drank a glass of cold darkness on a hot day.','The darkness of the ball flew over the fence.','She fixed the darkness with a wrench.'], ans: 0, hint: 'Darkness means the total absence of light.' },
+      { q: 'Which sentence uses "agreement" correctly?', opts: ['The agreement between the two friends was to share the toys.','The agreement of the cake was sweet and tasty.','He solved the math problem with great agreement.','The agreement of the car was fixed by the mechanic.'], ans: 0, hint: 'An agreement means two people promise or choose the same thing.' },
+      { q: 'Add the correct suffix: "biology" + ______ = a person who studies biology.', opts: ['-er (biologyer)','-or (biologyor)','-ist (biologist)','-ment (biologyment)'], ans: 2, hint: 'Drop the -y and add the expert suffix -ist.' },
+      { q: 'Choose the word that completes: "The ______ mixed flour and sugar to make a cake."', opts: ['baker','visitor','scientist','director'], ans: 0, hint: 'Look for the person whose job revolves around an oven.' },
+    ]
+  },
+  {
+    id: 's2',
+    title: 'Section 2: Verb Suffixes',
+    subtitle: '–en, –ify',
+    btnClass: 'btn-s2',
+    questions: [
+      { q: '"Soft" + "-en" = to make soft. What is the word?', opts: ['softify','softness','soften','softer'], ans: 2, hint: 'Add the suffix that means "to become or make."' },
+      { q: '"Sharp" + "-en" = to make sharp. What is the word?', opts: ['sharpify','sharpen','sharpness','sharper'], ans: 1, hint: 'Think of what you do to a dull pencil.' },
+      { q: '"Simple" + "-ify" = to make simple. What is the word?', opts: ['simplen','simpleify','simplify','simpleness'], ans: 2, hint: 'The suffix -ify means to make or turn into.' },
+      { q: '"Beauty" + "-ify" = to make beautiful. (y → i) What is the word?', opts: ['beautyify','beautyen','beautiness','beautify'], ans: 3, hint: 'Change the y to an i and add -ify.' },
+      { q: '"Wide" + "-en" = to make wide. What is the word?', opts: ['wideify','widify','widen','wideness'], ans: 2, hint: 'Drop the extra e when adding -en to wide.' },
+      { q: '"Bright" + "-en" = to make bright. What is the word?', opts: ['brightify','brighten','brightness','brighter'], ans: 1, hint: 'Think of what the sun does to a dark sky.' },
+      { q: '"Pure" + "-ify" = to make pure. (drop the e) What is the word?', opts: ['pureify','puren','pureen','purify'], ans: 3, hint: 'Drop the silent e from pure and add -ify.' },
+      { q: 'Which sentence uses "simplify" correctly?', opts: ['The teacher will simplify the lesson so everyone can understand.','The teacher will simplify the painting by using more colors.','She will simplify the butter by leaving it out.','We will simplify our poster by erasing all the words.'], ans: 0, hint: 'Simplify means to make something easier to understand.' },
+      { q: 'Which sentence uses "brighten" correctly?', opts: ['She will brighten the room by closing all the curtains.','She will brighten the dark hallway by turning on the light.','He will brighten the math problem by adding bigger numbers.','We will brighten the report by erasing all the words.'], ans: 1, hint: 'Brighten means to add light or make lighter.' },
+      { q: 'Choose: "Please ______ your pencil before the test."', opts: ['sharper','sharpify','sharpen','sharpness'], ans: 2, hint: 'You need an action verb that means to make it pointy.' },
+      { q: 'Choose: "This filter will ______ the water so it is safe to drink."', opts: ['puren','pure','purify','purity'], ans: 2, hint: 'This action means making something clean and clear.' },
+      { q: 'Choose: "The school will ______ parents if there is no school tomorrow."', opts: ['notify','notice','noten','notement'], ans: 0, hint: 'This verb means to give formal notice or make known.' },
+      { q: 'Choose: "Being sick can ______ your body for a few days."', opts: ['weaken','weakify','weakly','weakness'], ans: 0, hint: 'This action means to make your muscles less strong.' },
+      { q: 'Which suffix makes "class" into a verb meaning "to sort into groups"?', opts: ['-en (classen)','-ify (classify)','-ness (classness)','-ment (classment)'], ans: 1, hint: 'Think of the action libraries use to sort their books.' },
+      { q: 'Choose: "Scientists ______ animals into groups like mammals, birds, and fish."', opts: ['classen','classify','classment','classness'], ans: 1, hint: 'This verb means sorting things by category.' },
+    ]
+  },
+  {
+    id: 's3',
+    title: 'Section 3: Adjective Suffixes',
+    subtitle: '–ful, –less, –able, –y',
+    btnClass: 'btn-s3',
+    questions: [
+      { q: '"Hope" + "-ful" = full of hope. What is the word?', opts: ['hopeless','hopeful','hopement','hopeness'], ans: 1, hint: 'Use the suffix that means "full of."' },
+      { q: '"Care" + "-less" = without care. What is the word?', opts: ['careful','careness','careless','carement'], ans: 2, hint: 'Use the suffix that means "without."' },
+      { q: '"Beauty" + "-ful" = full of beauty. (y → i) What is the word?', opts: ['beautyful','beautifull','beautiful','beautiness'], ans: 2, hint: 'Remember that full loses one "l" when it becomes a suffix.' },
+      { q: '"Fear" + "-less" = without fear. What is the word?', opts: ['fearful','fearment','fearless','fearness'], ans: 2, hint: 'Think of a brave superhero who has no fear.' },
+      { q: '"Wash" + "-able" = can be washed. What is the word?', opts: ['washful','washless','washy','washable'], ans: 3, hint: 'The suffix -able means "capable of being."' },
+      { q: '"Sun" + "-y" = full of sun. (double the n) What is the word?', opts: ['sunable','sunless','sunny','sunful'], ans: 2, hint: 'Double the final consonant before adding the short -y suffix.' },
+      { q: '"Rain" + "-y" = full of rain. What is the word?', opts: ['rainful','rainable','raining','rainy'], ans: 3, hint: 'Think of a cloud-filled afternoon.' },
+      { q: '"Break" + "-able" = can be broken. What is the word?', opts: ['breakful','breakless','breakable','breaky'], ans: 2, hint: 'Glass windows are very easy to shatter because they are...' },
+      { q: 'Which sentence uses "joyful" correctly?', opts: ['The joyful wrench was used to fix the bicycle.','The joyful news made everyone smile and celebrate.','The joyful of the mountain was covered in snow.','He solved the joyful math problem very quickly.'], ans: 1, hint: 'Joyful describes someone or something full of pure happiness.' },
+      { q: 'Which sentence uses "fearless" correctly?', opts: ['The fearless kitten hid under the bed during the thunderstorm.','The fearless firefighter rushed into the burning building.','The fearless book was found on the library shelf.','The fearless car started on a cold morning.'], ans: 1, hint: 'Fearless describes an extremely brave action.' },
+      { q: 'Choose: "The lost puppy looked small and ______."', opts: ['helpful','helpless','helpment','helpness'], ans: 1, hint: 'The puppy is alone and cannot take care of itself.' },
+      { q: 'Choose: "The ______ path up the hill was hard to walk on."', opts: ['rockable','rockful','rocky','rockless'], ans: 2, hint: 'The ground is full of stones and pebbles.' },
+      { q: 'Choose: "I stayed up late reading, and now I feel very ______."', opts: ['sleepless','sleepful','sleepable','sleepy'], ans: 3, hint: 'This describing word means your eyes want to close.' },
+      { q: 'Choose: "Be careful with that vase; it is very ______."', opts: ['breakful','breakless','breaky','breakable'], ans: 3, hint: 'It can easily snap or shatter if dropped.' },
+      { q: 'Choose: "My watch is very ______; it always tells the correct time."', opts: ['relyable','reliable','reliible','relyful'], ans: 1, hint: 'Change the y in rely to an i before adding -able.' },
+    ]
+  },
+  {
+    id: 's4',
+    title: 'Section 4: Comparative & Superlative Suffixes',
+    subtitle: '–er (compare two), –est (compare three or more)',
+    btnClass: 'btn-s4',
+    questions: [
+      { q: '"Tall" + "-er" = comparing two heights. What is the word?', opts: ['tallest','tallmore','taller','tallish'], ans: 2, hint: 'Use the comparative suffix for two things.' },
+      { q: '"Fast" + "-est" = the most fast of all. What is the word?', opts: ['faster','fastmore','fastest','fastish'], ans: 2, hint: 'Use the superlative suffix for comparing everyone.' },
+      { q: '"Big" + "-er" = comparing two sizes. (double the g) What is the word?', opts: ['biggest','biger','bigger','bigmore'], ans: 2, hint: 'Make sure you double the g for this spelling.' },
+      { q: '"Happy" + "-er" = comparing two happiness levels. (y → i) What is the word?', opts: ['happiest','happyest','happier','happymore'], ans: 2, hint: 'Turn the y into an i before adding the two-item modifier.' },
+      { q: '"Hot" + "-est" = the most hot. (double the t) What is the word?', opts: ['hoter','hotter','hottest','hotest'], ans: 2, hint: 'Double the t and choose the top-tier comparison suffix.' },
+      { q: '"Cold" + "-est" = the most cold. What is the word?', opts: ['colder','coldest','coldmore','coldish'], ans: 1, hint: 'This means the absolute lowest temperature of all.' },
+      { q: '"Funny" + "-est" = the most funny. (y → i) What is the word?', opts: ['funnyer','funnyest','funnymost','funniest'], ans: 3, hint: 'Change y to i and use the suffix for three or more things.' },
+      { q: 'Choose the correct sentence: My brother is ______ than my sister.', opts: ['My brother is tallest than my sister.','My brother is taller than my sister.','My brother is the taller in our school.','My brother is more tall than my sister.'], ans: 1, hint: 'When comparing exactly two items, use -er followed by than.' },
+      { q: 'Choose the correct sentence about "biggest."', opts: ['That is the biggest sandwich I have ever seen!','That sandwich is biggest than the one I ate yesterday.','That sandwich is more biggest.','That sandwich is bigger of all.'], ans: 0, hint: 'The word biggest requires "the" and points out the absolute top size.' },
+      { q: 'Choose the correct word: "July is usually the ______ month of the year."', opts: ['hotter','hottest','most hot','hotmore'], ans: 1, hint: 'You are comparing all twelve months of the year.' },
+      { q: 'Choose: "My dad is ______ than my uncle." (comparing two people)', opts: ['tallest','taller','most tall','tall'], ans: 1, hint: 'Look for the suffix used when comparing exactly two people.' },
+      { q: 'Choose: "That was the ______ joke I have ever heard!" (comparing all jokes ever)', opts: ['funnier','funnyer','funniest','more funny'], ans: 2, hint: 'Think of the absolute best, most laughable joke.' },
+      { q: 'Choose: "A rabbit runs ______ than a turtle." (comparing two animals)', opts: ['fastest','faster','most fast','fastmore'], ans: 1, hint: 'Use the -er suffix when matching one speed against another.' },
+      { q: 'Choose: "Antarctica is one of the ______ places on Earth." (comparing many places)', opts: ['colder','coldish','coldest','most coldest'], ans: 2, hint: 'It represents the extreme champion of cold weather.' },
+      { q: '"Sunny" + "-er" = comparing two days. (y → i) What is the word?', opts: ['sunnyer','sunniest','sunnymore','sunnier'], ans: 3, hint: 'Swap the y to an i and use the comparison suffix.' },
+    ]
+  },
+  {
+    id: 'mastery',
+    title: 'Mastery Test',
+    subtitle: 'All suffix types — show what you know!',
+    btnClass: 'btn-mastery',
+    questions: [
+      { q: 'Part 1 — Choose: "My ______, Mr. Davis, helps us learn new words every day."', opts: ['teach','teacher','teaches','teaching'], ans: 1, hint: 'Look for the person noun who manages a classroom.' },
+      { q: 'Part 1 — Choose: "Please ______ the butter so it is easy to spread."', opts: ['soft','softly','soften','softness'], ans: 2, hint: 'You need an action verb that means to make it soft.' },
+      { q: 'Part 1 — Choose: "We planted flowers to ______ our school garden."', opts: ['beauty','beautiful','beautify','beautiness'], ans: 2, hint: 'Look for the action word that means to make beautiful.' },
+      { q: 'Part 1 — Choose: "Her ______ was shown when she helped the new student."', opts: ['kind','kindness','unkind','kinder'], ans: 1, hint: 'Look for the noun that means the state of being kind.' },
+      { q: 'Part 1 — Choose: "My new boots are ______, so I can wash them if they get muddy."', opts: ['washable','washer','wash','washful'], ans: 0, hint: 'This means they are capable of being cleaned.' },
+      { q: 'Part 1 — Choose: "That was the ______ movie I have ever seen!"', opts: ['funny','funnier','funniest','funnyest'], ans: 2, hint: 'This means it was the number one funny movie of all.' },
+      { q: 'Part 1 — Choose: "A good dictionary is very ______ when you are reading a hard book."', opts: ['help','helpful','helpless','helpment'], ans: 1, hint: 'This means it is full of helpful support.' },
+      { q: 'Part 1 — Choose: "July is usually ______ than June where we live."', opts: ['hotter','hot','hottest','hotness'], ans: 0, hint: 'Compare the heat of exactly two separate months.' },
+      { q: 'Part 2 — Fix the word: "kind + ______ = the state of being kind"', opts: ['kindness','kinder','kindment','kindful'], ans: 0, hint: 'Use the noun maker suffix for internal traits.' },
+      { q: 'Part 2 — Fix the word: "happy + ______ = full of happiness"', opts: ['happyful','happiness','happyfull','happiment'], ans: 1, hint: 'Change the y to an i and add the correct state-of-being suffix.' },
+      { q: 'Part 2 — Fix the word: "act + ______ = a person who acts"', opts: ['actment','acten','actor','actist'], ans: 2, hint: 'Think of a theater or movie professional.' },
+      { q: 'Part 2 — Fix the word: "care + ______ = without care"', opts: ['careful','careness','careless','carement'], ans: 2, hint: 'Look for the suffix that means completely without.' },
+      { q: 'Part 2 — Fix the word: "break + ______ = can be broken"', opts: ['breakful','breakness','breaky','breakable'], ans: 3, hint: 'Look for the suffix that means it can be done.' },
+      { q: 'Part 2 — Fix the word: "sun + ______ = full of sun"', opts: ['sunable','sunful','sunny','sunless'], ans: 2, hint: 'Double the n and add the short vowel descriptive ending.' },
+      { q: 'Part 3 — Circle the correct word: "The ( teacher / teachable ) helped us learn math."', opts: ['teacher','teachable','teaches','teaching'], ans: 0, hint: 'Choose the person noun for this slot.' },
+      { q: 'Part 3 — Circle the correct word: "I had a ( wonderful / wonderless ) time at the zoo."', opts: ['wonderless','wonderful','wonderment','wondering'], ans: 1, hint: 'This means your trip was full of magic and wonder.' },
+      { q: 'Part 3 — Circle the correct word: "My dad is ( taller / tallest ) than my uncle."', opts: ['tallest','taller','tallmore','tall'], ans: 1, hint: 'You are comparing two relatives.' },
+      { q: 'Part 3 — Circle: "That was the ( funnyest / funniest ) clown at the circus."', opts: ['funnyest','funnier','funniest','funnyer'], ans: 2, hint: 'Watch the spelling rule closely: replace y with i.' },
+      { q: 'Part 4 — Fill in: "His constant ______ made it hard to finish the puzzle." (move)', opts: ['mover','movement','moveness','moveful'], ans: 1, hint: 'You need the noun form of the word move.' },
+      { q: 'Part 4 — Fill in: "She is the ______ person in our class to solve the puzzle." (luck)', opts: ['luckier','luckyest','luckiest','luckness'], ans: 2, hint: 'Change the y to an i and choose the highest tier comparison.' },
+      { q: 'Part 5 — Story: "It was a ______ day, perfect for working outside."', opts: ['teacher','beautiful','sunny','hopeless'], ans: 2, hint: 'Think about a bright sky full of light.' },
+      { q: 'Part 5 — Story: "Our ______, Ms. Chen, asked us to be careful with the new plants."', opts: ['scientist','teacher','artist','runner'], ans: 1, hint: 'Who leads the children in the school garden?' },
+      { q: 'Part 5 — Story: "The sunflower was ______ than the rose bush."', opts: ['biggest','bigger','most big','bigest'], ans: 1, hint: 'Compare the size of the sunflower to the single rose bush.' },
+      { q: 'Part 5 — Story: "It was also the ______ plant in the garden." (tallest)', opts: ['taller','tallmore','tallest','tallist'], ans: 2, hint: 'It beats every single other plant in height.' },
+      { q: 'Part 5 — Story: "At first, planting seemed ______ because it was so much work."', opts: ['helpful','careful','wonderful','hopeless'], ans: 3, hint: 'The kids felt like there was no hope of finishing the hard work.' },
+    ]
+  }
+];
+
+// ===== STATE =====
+let state = {
+  screen: 'menu',
+  sectionIdx: null,
+  questions: [],
+  qIdx: 0,
+  points: 0,
+  correct: 0,
+  wrong: 0,
+  selected: null,
+  hintUsed: false,
+  hintShown: false,
+  answered: false,
+  hintPending: false,
+};
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function prepareQuestions(section) {
+  const qs = shuffle([...section.questions]);
+  return qs.map(q => {
+    const opts = q.opts.map((o, i) => ({ text: o, isAns: i === q.ans }));
+    const shuffled = shuffle(opts);
+    return { ...q, shuffledOpts: shuffled };
+  });
+}
+
+// ===== RENDER =====
+const app = document.getElementById('app');
+
+function render() {
+  if (state.screen === 'menu') renderMenu();
+  else if (state.screen === 'quiz') renderQuiz();
+  else if (state.screen === 'end') renderEnd();
+}
+
+function renderMenu() {
+  app.innerHTML = `
+    <div class="brand">Agarutan Print</div>
+    <div class="quiz-title">What Are Suffixes?</div>
+    <div class="quiz-subtitle">Build Vocabulary &amp; Word Forms</div>
+    ${SECTIONS.map((s, i) => `
+      <button class="section-btn ${s.btnClass}" onclick="startSection(${i})">
+        ${i === SECTIONS.length - 1 ? '🏆 ' : ''}${s.title}
+        <span style="font-size:0.78rem;font-weight:400;display:block;color:inherit;opacity:0.8;">${s.subtitle}</span>
+      </button>
+    `).join('')}
+  `;
+}
+
+function startSection(i) {
+  state.sectionIdx = i;
+  state.questions = prepareQuestions(SECTIONS[i]);
+  state.qIdx = 0;
+  state.points = 0;
+  state.correct = 0;
+  state.wrong = 0;
+  state.screen = 'quiz';
+  state.selected = null;
+  state.hintUsed = false;
+  state.hintShown = false;
+  state.answered = false;
+  render();
+}
+
+function renderQuiz() {
+  const section = SECTIONS[state.sectionIdx];
+  const q = state.questions[state.qIdx];
+  const total = state.questions.length;
+  const pct = total > 0 ? Math.round((state.correct / Math.max(1, state.correct + state.wrong)) * 100) : 0;
+  const progPct = Math.round(((state.qIdx + 1) / total) * 100);
+
+  app.innerHTML = `
+    <div class="section-header">${section.title}</div>
+    <div class="question-counter">Question ${state.qIdx + 1} of ${total}</div>
+    <div class="prog-bar-wrap"><div class="prog-bar" style="width:${progPct}%"></div></div>
+    <div class="stats-row">
+      <div class="stat-pill pill-pts">⭐ ${state.points} pts</div>
+      <div class="stat-pill pill-cor">✅ ${state.correct}</div>
+      <div class="stat-pill pill-wrg">❌ ${state.wrong}</div>
+      <div class="stat-pill pill-pct">🎯 ${state.correct + state.wrong > 0 ? pct : '—'}%</div>
+    </div>
+    <div class="question-text">${q.q}</div>
+    <div class="options" id="opts">
+      ${q.shuffledOpts.map((o, i) => `
+        <button class="opt-btn" id="opt${i}" onclick="selectOpt(${i})" ${state.answered ? 'disabled' : ''}>${o.text}</button>
+      `).join('')}
+    </div>
+    ${!state.answered ? `
+      <button class="hint-btn" onclick="showHint()" ${state.hintShown ? 'disabled style="opacity:0.5"' : ''}>💡 Show Hint (-5 pts if used)</button>
+      ${state.hintShown ? `<div class="hint-box">💡 ${q.hint}</div>` : ''}
+    ` : `<div class="feedback ${state.lastCorrect ? 'correct' : 'wrong'}" id="feedback">
+        ${state.lastCorrect ? '✅ Correct! +' + (state.hintUsed ? '5' : '10') + ' points' : '❌ Not quite! The correct answer is highlighted.'}
+      </div>
+      <button class="next-btn" onclick="nextQuestion()">${state.qIdx + 1 < total ? 'Next Question ➜' : 'See Results 🎉'}</button>
+    `}
+    <button class="exit-btn" onclick="goMenu()">✕ Exit to Menu</button>
+  `;
+
+  if (state.answered) {
+    q.shuffledOpts.forEach((o, i) => {
+      const btn = document.getElementById('opt' + i);
+      if (o.isAns) btn.classList.add('correct');
+      else if (i === state.selected && !o.isAns) btn.classList.add('wrong');
+    });
+  }
+}
+
+function selectOpt(i) {
+  if (state.answered) return;
+  state.answered = true;
+  state.selected = i;
+  const q = state.questions[state.qIdx];
+  const correct = q.shuffledOpts[i].isAns;
+  state.lastCorrect = correct;
+  if (correct) {
+    const pts = state.hintUsed ? 5 : 10;
+    state.points += pts;
+    state.correct++;
+  } else {
+    state.wrong++;
+  }
+  state.hintUsed = false;
+  render();
+}
+
+function showHint() {
+  if (state.hintShown) return;
+  state.hintShown = true;
+  state.hintUsed = true;
+  render();
+}
+
+function nextQuestion() {
+  state.qIdx++;
+  const section = SECTIONS[state.sectionIdx];
+  if (state.qIdx >= state.questions.length) {
+    state.screen = 'end';
+  }
+  state.selected = null;
+  state.hintUsed = false;
+  state.hintShown = false;
+  state.answered = false;
+  render();
+}
+
+function goMenu() {
+  state.screen = 'menu';
+  render();
+}
+
+function renderEnd() {
+  const total = state.questions.length;
+  const maxPts = total * 10;
+  const pct = Math.round((state.correct / total) * 100);
+  const pass = pct >= 70;
+  const isMastery = state.sectionIdx === SECTIONS.length - 1;
+
+  let title = '';
+  if (pct === 100) title = '🏆 Spectacular!';
+  else if (pct >= 85) title = '⭐ Excellent!';
+  else if (pct >= 70) title = '🌟 Great Job!';
+
+  const starsHtml = pass ? [0,1,2,3,4].map(i =>
+    `<span class="star" style="animation-delay:${i*0.15}s">⭐</span>`
+  ).join('') : '';
+
+  const reviewBox = (isMastery && pass && SRC) ? buildReviewBox() : '';
+
+  app.innerHTML = `
+    <div class="end-screen">
+      ${pass ? `
+        <div class="trophy">🏆</div>
+        <div class="stars-row">${starsHtml}</div>
+        <div class="end-title">${title}</div>
+        <div class="end-subtitle">You scored ${pct}% on ${SECTIONS[state.sectionIdx].title}!</div>
+      ` : `
+        <div class="encourage-icon">💪</div>
+        <div class="end-title">Keep Going!</div>
+        <div class="end-subtitle">You scored ${pct}%. Practice makes perfect — try again!</div>
+      `}
+      <div class="end-stats">
+        <div class="end-pill pill-pts">⭐ ${state.points} pts</div>
+        <div class="end-pill pill-cor">✅ ${state.correct}</div>
+        <div class="end-pill pill-wrg">❌ ${state.wrong}</div>
+        <div class="end-pill pill-pct">🎯 ${pct}%</div>
+      </div>
+      <button class="action-btn btn-try" onclick="startSection(${state.sectionIdx})">🔄 Try Again</button>
+      <button class="action-btn btn-menu" onclick="goMenu()">🏠 Back to Menu</button>
+      ${reviewBox}
+    </div>
+  `;
+}
+
+function buildReviewBox() {
+  let buttons = '';
+  if (SRC === 'etsy') {
+    buttons = `<a class="review-link-btn" href="https://www.etsy.com/your/purchases" target="_blank">⭐ Leave a Review on Etsy</a>`;
+  } else if (SRC === 'amazon') {
+    buttons = `
+      <a class="review-link-btn" href="https://www.amazon.com/review/create-review?asin=${PAPERBACK_ASIN}" target="_blank">📗 Review Paperback on Amazon</a>
+      <a class="review-link-btn" href="https://www.amazon.com/review/create-review?asin=${HARDCOVER_ASIN}" target="_blank">📘 Review Hardcover on Amazon</a>
+    `;
+  }
+  return `
+    <div class="review-box">
+      <h3>🔒 Notice: For Parents &amp; Educators</h3>
+      <div class="rq">How did you like this complete resource bundle?</div>
+      <p>Thank you for choosing Agarutan Print! We hope this combination of printable worksheets, the digital fillable PDF, and the interactive quiz bonus is helping to build your student's skills.</p>
+      <p>If this comprehensive resource bundle added value to your student's learning experience, please take a brief moment to share your feedback. Your review helps us continue creating high-quality learning assets!</p>
+      ${buttons}
+    </div>
+  `;
+}
+
+// Init
+render();
+</script>
+</body>
+</html>
